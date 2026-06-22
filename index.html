@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>曼昆中级宏观经济学答题系统</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">MANKIW · MACROECONOMICS</p>
+            <h1>中级宏观经济学答题系统</h1>
+          </div>
+          <div class="scoreboard" aria-label="学习统计">
+            <div><strong id="answeredCount">0</strong><span>已答</span></div>
+            <div><strong id="correctRate">0%</strong><span>正确率</span></div>
+            <div><strong id="wrongCount">0</strong><span>错题</span></div>
+            <div><strong id="starCount">0</strong><span>收藏</span></div>
+          </div>
+        </header>
+
+        <nav class="toolbar" aria-label="题库筛选">
+          <select id="typeFilter" aria-label="题型"></select>
+          <select id="chapterFilter" aria-label="章节"></select>
+          <select id="modeFilter" aria-label="练习模式">
+            <option value="all">全部题目</option>
+            <option value="unanswered">未答题</option>
+            <option value="wrong">错题复盘</option>
+            <option value="starred">收藏题</option>
+            <option value="difficult">重点与困难</option>
+          </select>
+          <input id="searchInput" type="search" placeholder="搜索题干或知识点" aria-label="搜索" />
+          <button id="randomBtn" type="button" title="随机抽题">随机</button>
+        </nav>
+
+        <article class="question-area">
+          <div class="question-meta">
+            <span id="positionChip"></span>
+            <span id="typeChip"></span>
+            <span id="chapterChip"></span>
+            <span id="difficultyChip"></span>
+            <button id="starBtn" class="star-button" type="button" title="收藏本题">☆</button>
+          </div>
+
+          <h2 id="questionText"></h2>
+          <div id="options" class="options"></div>
+
+          <section id="writtenArea" class="written-area" hidden>
+            <label for="writtenAnswer">你的答案</label>
+            <textarea id="writtenAnswer" placeholder="先独立作答。简答题分点写，计算题写出公式和步骤。"></textarea>
+            <button id="checkWrittenBtn" class="primary" type="button">核对参考答案</button>
+          </section>
+
+          <section id="feedback" class="feedback" hidden></section>
+
+          <div class="question-actions">
+            <button id="prevBtn" type="button">← 上一题</button>
+            <button id="retryBtn" type="button" hidden>标记再练</button>
+            <button id="masterBtn" type="button" hidden>标记掌握</button>
+            <button id="nextBtn" class="primary" type="button">下一题 →</button>
+          </div>
+        </article>
+      </section>
+
+      <aside class="sidebar">
+        <img class="model-map" src="./assets/macro-map.png" alt="索洛、IS-LM与AD-AS模型曲线概览" />
+        <section>
+          <div class="section-heading"><h2>学习进度</h2><span id="progressLabel">0 / 62</span></div>
+          <div class="progress"><span id="progressBar"></span></div>
+          <p id="progressTip" class="muted"></p>
+        </section>
+        <section>
+          <h2>题型地图</h2>
+          <div id="typeSummary" class="summary-list"></div>
+        </section>
+        <section>
+          <h2>本题知识点</h2>
+          <p id="knowledgeText" class="knowledge-text"></p>
+        </section>
+        <section>
+          <h2>答题说明</h2>
+          <p class="muted">单选题点击选项立即判定；选错会显示该选项错在哪里。主观题先作答，再核对完整答案并自行标记掌握程度。</p>
+        </section>
+      </aside>
+    </main>
+
+    <script src="./data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
