@@ -97,10 +97,20 @@ h1 { font-size: 27px; line-height: 1.2; letter-spacing: 0; }
 .written-area textarea { width: 100%; min-height: 170px; padding: 14px; resize: vertical; line-height: 1.75; }
 .written-area button { width: 150px; height: 42px; }
 
-.feedback { margin-top: 20px; padding: 18px; border-left: 5px solid var(--green); background: var(--green-soft); line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }
+.feedback { margin-top: 20px; padding: 18px; border-left: 5px solid var(--green); background: var(--green-soft); line-height: 1.75; overflow-wrap: anywhere; }
 .feedback.error { border-color: var(--red); background: var(--red-soft); }
 .feedback h3 { margin: 0 0 9px; font-size: 17px; }
-.feedback .answer-key { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(32, 106, 85, 0.25); }
+.feedback h4 { margin: 0 0 6px; font-size: 15px; }
+.feedback-block { margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(32, 106, 85, 0.25); }
+.easy-box, .memory-box { margin-top: 12px; padding: 12px 14px; background: #fff; border-left: 4px solid var(--blue); }
+.memory-box { border-left-color: var(--gold); background: var(--gold-soft); }
+.preserve { white-space: pre-wrap; }
+.option-analysis { display: grid; gap: 8px; }
+.option-line { padding: 9px 10px; background: rgba(255, 255, 255, 0.66); border-left: 3px solid #b86a62; }
+.option-line strong, .option-line span { display: block; }
+.option-line span { margin-top: 3px; }
+.option-line.correct-line { border-left-color: var(--green); }
+.knowledge-tag, .source-link { margin-top: 10px; }
 .feedback a { color: var(--blue); }
 
 .question-actions { margin-top: auto; padding-top: 24px; display: flex; flex-wrap: wrap; gap: 8px; }

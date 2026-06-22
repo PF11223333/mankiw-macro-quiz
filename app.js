@@ -116,10 +116,21 @@ function showChoiceFeedback(item, choice) {
   const correct = choice === item.correctAnswer;
   const selectedText = item.options[choice] || "";
   const correctText = item.options[item.correctAnswer] || "";
+  const optionAnalysis = Object.entries(item.options).map(([letter, text]) => {
+    const isCorrect = letter === item.correctAnswer;
+    const reason = isCorrect ? item.explanation : (item.wrongReasons[letter] || "不符合题目的模型条件或因果方向。 ");
+    return `<div class="option-line ${isCorrect ? "correct-line" : ""}"><strong>${letter}、${escapeHtml(text)}</strong><span>${isCorrect ? "为什么对：" : "为什么错："}${escapeHtml(reason)}</span></div>`;
+  }).join("");
   els.feedback.className = correct ? "feedback" : "feedback error";
-  els.feedback.innerHTML = correct
-    ? `<h3>回答正确</h3><div>${escapeHtml(item.explanation)}</div><div class="answer-key"><strong>原书知识点：</strong>${escapeHtml(item.knowledge)}</div>`
-    : `<h3>回答错误：${choice}、${escapeHtml(selectedText)}</h3><div><strong>错误点：</strong>${escapeHtml(item.wrongReasons[choice] || "该选项不符合模型条件或因果方向。")}</div><div class="answer-key"><strong>正确答案：</strong>${item.correctAnswer}、${escapeHtml(correctText)}<br><strong>为什么正确：</strong>${escapeHtml(item.explanation)}<br><strong>原书知识点：</strong>${escapeHtml(item.knowledge)}</div>`;
+  els.feedback.innerHTML = `
+    <h3>${correct ? "答对了，把“为什么”也吃透" : "先别慌，这题错在这里"}</h3>
+    <section class="easy-box"><h4>太奶版：先听懂</h4><div>${escapeHtml(item.easyExplanation || item.explanation)}</div></section>
+    <section class="memory-box"><h4>考试就记</h4><div>${escapeHtml(item.memoryTip || item.knowledge)}</div></section>
+    ${correct ? "" : `<section class="feedback-block"><h4>你选的 ${choice} 为什么错</h4><div><strong>${choice}、${escapeHtml(selectedText)}</strong></div><div>${escapeHtml(item.wrongReasons[choice] || "它不符合题目的模型条件或因果方向。")}</div></section>`}
+    <section class="feedback-block"><h4>正确答案</h4><div><strong>${item.correctAnswer}、${escapeHtml(correctText)}</strong></div><div>${escapeHtml(item.explanation)}</div></section>
+    <section class="feedback-block"><h4>一步一步推导</h4><div class="preserve">${escapeHtml(item.deepAnalysis || item.explanation)}</div></section>
+    <section class="feedback-block"><h4>其他选项也错在哪里</h4><div class="option-analysis">${optionAnalysis}</div></section>
+    <section class="feedback-block"><h4>原书知识补充</h4><div class="preserve">${escapeHtml(item.chapterNote || item.knowledge)}</div><div class="knowledge-tag"><strong>本题知识点：</strong>${escapeHtml(item.knowledge)}</div></section>`;
   els.feedback.hidden = false;
 }
 
@@ -129,12 +140,14 @@ function showWrittenAnswer() {
   state.drafts[item.id] = els.writtenAnswer.value;
   state.answered[item.id] = { reviewed: true, correct: state.mastered.includes(item.id) };
   saveState();
-  const source = item.sourceUrl ? `\n\n官方资料：${item.sourceUrl}` : "";
-  els.feedback.textContent = `参考答案\n\n${item.answer}${source}\n\n对应知识点：${item.knowledge}`;
-  if (item.sourceUrl) {
-    const url = item.sourceUrl;
-    els.feedback.innerHTML = `${escapeHtml(`参考答案\n\n${item.answer}\n\n对应知识点：${item.knowledge}\n\n官方资料：`)}<a href="${url}" target="_blank" rel="noreferrer">中国政府网正式纲要</a>`;
-  }
+  els.feedback.className = "feedback";
+  const source = item.sourceUrl ? `<div class="source-link"><strong>官方资料：</strong><a href="${item.sourceUrl}" target="_blank" rel="noreferrer">中国政府网正式纲要</a></div>` : "";
+  els.feedback.innerHTML = `
+    <h3>对答案时，先看思路，再看全文</h3>
+    <section class="easy-box"><h4>太奶版作答法</h4><div>${escapeHtml(item.easyExplanation)}</div></section>
+    <section class="memory-box"><h4>考试就记</h4><div>${escapeHtml(item.memoryTip)}</div></section>
+    <section class="feedback-block"><h4>完整参考答案</h4><div class="preserve">${escapeHtml(item.answer)}</div></section>
+    <section class="feedback-block"><h4>原书知识补充</h4><div class="preserve">${escapeHtml(item.chapterNote)}</div><div class="knowledge-tag"><strong>对应知识点：</strong>${escapeHtml(item.knowledge)}</div>${source}</section>`;
   els.feedback.hidden = false;
   els.retryBtn.hidden = false;
   els.masterBtn.hidden = false;
