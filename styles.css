@@ -47,6 +47,11 @@ button:hover { border-color: var(--green); }
 
 .workspace { min-height: calc(100vh - 44px); display: flex; flex-direction: column; }
 
+.site-nav { min-height: 48px; display: flex; align-items: stretch; border-bottom: 1px solid var(--line); }
+.site-nav a { min-width: 130px; padding: 13px 18px; display: flex; justify-content: center; align-items: center; gap: 7px; color: var(--muted); text-decoration: none; font-weight: 800; border-right: 1px solid var(--line); }
+.site-nav a:hover, .site-nav a.active { color: #fff; background: var(--green); }
+.site-nav span { min-width: 22px; height: 22px; display: inline-grid; place-items: center; background: var(--red); color: #fff; font-size: 11px; }
+
 .topbar {
   padding: 20px 24px;
   display: flex;
@@ -151,4 +156,5 @@ h1 { font-size: 27px; line-height: 1.2; letter-spacing: 0; }
   .toolbar { grid-template-columns: 1fr; }
   .toolbar input { grid-column: auto; }
   .question-actions #nextBtn { margin-left: 0; }
+  .site-nav a { min-width: 0; flex: 1; padding: 11px 7px; font-size: 13px; }
 }

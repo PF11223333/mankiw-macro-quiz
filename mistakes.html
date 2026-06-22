@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>错题本｜中级宏观经济学</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./modules.css" />
+</head>
+<body>
+  <main class="study-shell">
+    <nav class="site-nav" aria-label="学习模块">
+      <a href="./index.html">答题训练</a><a href="./knowledge.html">章节知识库</a><a class="active" href="./mistakes.html">错题本 <span id="navWrongCount">0</span></a>
+    </nav>
+    <header class="module-header mistakes-header">
+      <div><p class="eyebrow">MISTAKE NOTEBOOK</p><h1>错题本</h1><p>系统自动记下错因和次数；写一句自己的提醒，比只看正确答案更有用。</p></div>
+      <div class="mistake-stats"><strong id="pendingCount">0</strong><span>待掌握</span><strong id="attemptCount">0</strong><span>累计答错</span></div>
+    </header>
+    <section class="mistake-tools">
+      <select id="mistakeChapter" aria-label="按章节筛选"><option value="all">全部章节</option></select>
+      <input id="mistakeSearch" type="search" placeholder="搜索题干、知识点或笔记" />
+    </section>
+    <section id="mistakeList" class="mistake-list"></section>
+  </main>
+  <script src="./data.js"></script>
+  <script src="./mistakes.js"></script>
+</body>
+</html>

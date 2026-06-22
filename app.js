@@ -6,9 +6,10 @@ const els = Object.fromEntries([
   "searchInput", "randomBtn", "positionChip", "typeChip", "chapterChip", "difficultyChip", "starBtn",
   "questionText", "options", "writtenArea", "writtenAnswer", "checkWrittenBtn", "feedback", "prevBtn",
   "retryBtn", "masterBtn", "nextBtn", "progressLabel", "progressBar", "progressTip", "typeSummary", "knowledgeText",
+  "navWrongCount",
 ].map((id) => [id, document.querySelector(`#${id}`)]));
 
-const fallback = { answered: {}, wrong: [], starred: [], mastered: [], drafts: {} };
+const fallback = { answered: {}, wrong: [], starred: [], mastered: [], drafts: {}, mistakes: {} };
 let state = loadState();
 let filtered = [];
 let currentIndex = 0;
@@ -21,6 +22,18 @@ function loadState() {
 function saveState() { localStorage.setItem(stateKey, JSON.stringify(state)); }
 function unique(values) { return [...new Set(values)]; }
 function escapeHtml(value) { return String(value).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[ch]); }
+function rememberMistake(item, choice = null) {
+  const previous = state.mistakes[item.id] || { attempts: 0, wrongChoices: [], note: "" };
+  state.mistakes[item.id] = {
+    ...previous,
+    attempts: previous.attempts + 1,
+    wrongChoices: choice ? unique([...(previous.wrongChoices || []), choice]) : (previous.wrongChoices || []),
+    mastered: false,
+    lastAt: new Date().toISOString(),
+  };
+  state.wrong = unique([item.id, ...state.wrong]);
+  state.mastered = state.mastered.filter((id) => id !== item.id);
+}
 
 function setupFilters() {
   const types = ["全部题型", ...Object.keys(data.summary)];
@@ -105,8 +118,7 @@ function answerChoice(choice) {
   if (!item || state.answered[item.id]) return;
   const correct = choice === item.correctAnswer;
   state.answered[item.id] = { choice, correct };
-  if (correct) state.wrong = state.wrong.filter((id) => id !== item.id);
-  else state.wrong = unique([item.id, ...state.wrong]);
+  if (!correct) rememberMistake(item, choice);
   saveState();
   renderOptions(item);
   renderStats();
@@ -160,9 +172,9 @@ function markWritten(mastered) {
   if (mastered) {
     state.mastered = unique([...state.mastered, item.id]);
     state.wrong = state.wrong.filter((id) => id !== item.id);
+    if (state.mistakes[item.id]) state.mistakes[item.id].mastered = true;
   } else {
-    state.mastered = state.mastered.filter((id) => id !== item.id);
-    state.wrong = unique([item.id, ...state.wrong]);
+    rememberMistake(item);
   }
   state.answered[item.id] = { reviewed: true, correct: mastered };
   saveState();
@@ -177,6 +189,7 @@ function renderStats() {
   els.correctRate.textContent = answeredIds.length ? `${Math.round(correct / answeredIds.length * 100)}%` : "0%";
   els.wrongCount.textContent = state.wrong.length;
   els.starCount.textContent = state.starred.length;
+  if (els.navWrongCount) els.navWrongCount.textContent = state.wrong.length;
   els.progressLabel.textContent = `${answeredIds.length} / ${data.count}`;
   els.progressBar.style.width = `${Math.round(answeredIds.length / data.count * 100)}%`;
   els.progressTip.textContent = state.wrong.length ? `当前有 ${state.wrong.length} 道需要复盘。先理解错误原因，再重做。` : "从选择题开始热身，再完成简答和计算推导。";
@@ -209,5 +222,10 @@ els.checkWrittenBtn.addEventListener("click", showWrittenAnswer);
 els.retryBtn.addEventListener("click", () => markWritten(false));
 els.masterBtn.addEventListener("click", () => markWritten(true));
 
+const focusId = new URLSearchParams(location.search).get("question");
+if (focusId && data.items.some((item) => item.id === focusId)) {
+  delete state.answered[focusId];
+  saveState();
+}
 setupFilters();
-applyFilters(null);
+applyFilters(focusId || null);

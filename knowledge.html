@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>章节知识库｜中级宏观经济学</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./modules.css" />
+</head>
+<body>
+  <main class="study-shell">
+    <nav class="site-nav" aria-label="学习模块">
+      <a href="./index.html">答题训练</a><a class="active" href="./knowledge.html">章节知识库</a><a href="./mistakes.html">错题本 <span id="navWrongCount">0</span></a>
+    </nav>
+    <header class="module-header">
+      <p class="eyebrow">CHAPTER KNOWLEDGE BASE</p>
+      <h1>章节知识库</h1>
+      <p>先用人话听懂，再用公式和模型图把考试语言补齐。</p>
+    </header>
+    <div class="knowledge-layout">
+      <aside class="chapter-index">
+        <label for="knowledgeSearch">搜索知识点</label>
+        <input id="knowledgeSearch" type="search" placeholder="例如：黄金律、通胀、IS" />
+        <div id="chapterList"></div>
+      </aside>
+      <article id="knowledgeDetail" class="knowledge-detail"></article>
+    </div>
+  </main>
+  <script src="./knowledge-data.js"></script>
+  <script src="./knowledge.js"></script>
+</body>
+</html>
